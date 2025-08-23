@@ -25,15 +25,16 @@ export default function Home() {
         </h2>
         
       </div>
-    </section>
-
-    {resumes.length && (
+          {resumes.length && (
       <div className="resumes-section">
          {resumes.map((resume) => (
           <ResumeCard key={resume.id} resume={resume}/>
       ))}
       </div>
     )}
+    </section>
+
+
      
   </main>
 }
