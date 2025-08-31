@@ -2,7 +2,9 @@ import { Link } from "react-router";
 import ScoreCircle from "~/components/ScoreCircle";
 
 // @ts-ignore
-const ResumeCard = ({ resume: { id, companyName, jobTitle, feedback, imagePath } }) => {
+const ResumeCard = ({
+  resume: { id, companyName, jobTitle, feedback, imagePath },
+}) => {
   return (
     <Link
       to={`/resume/${id}`}
@@ -24,7 +26,7 @@ const ResumeCard = ({ resume: { id, companyName, jobTitle, feedback, imagePath }
       <div className="gradient-border animate-in fade-in duration-1000">
         <div className="w-full h-full">
           <img
-            src= {imagePath}
+            src={imagePath}
             alt="resume"
             className="w-full h-[350px] max-sm:h-[200px] object-cover object-top"
           />
