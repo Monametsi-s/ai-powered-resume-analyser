@@ -14,8 +14,8 @@ const ATS = ({
         score > 69
           ? "from-green-100"
           : score > 49
-          ? "from-yellow-100"
-          : "from-red-100"
+            ? "from-yellow-100"
+            : "from-red-100"
       )}
     >
       <div className="flex flex-row gap-4 items-center">
@@ -24,8 +24,8 @@ const ATS = ({
             score > 69
               ? "/icons/ats-good.svg"
               : score > 49
-              ? "/icons/ats-warning.svg"
-              : "/icons/ats-bad.svg"
+                ? "/icons/ats-warning.svg"
+                : "/icons/ats-bad.svg"
           }
           alt="ATS"
           className="w-10 h-10"
