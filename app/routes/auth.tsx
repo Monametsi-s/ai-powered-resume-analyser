@@ -1,8 +1,24 @@
+import { use } from "react";
+import { usePuterStore } from "~/lib/puter";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
+
 export const meta = () => [
   { title: "CVAnalyser | Auth" },
   { name: "description", content: "Login to your account" },
 ];
+
 const auth = () => {
+  const { isLoading, auth } = usePuterStore();
+  const location = useLocation();
+  const next = location.search.split("next=")[1];
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (auth.isAuthenticated) navigate(next);
+  }, [auth.isAuthenticated, next])
+
+
   return (
     <main className="bg-[url('/images/bg-auth.svg')] bg-cover min-h-screen flex items-center justify-center">
       <div className="gradient-border shadow-lg">
@@ -11,6 +27,26 @@ const auth = () => {
             <h1>Welcome</h1>
             <h2>Log In to Continue Your Job Journey</h2>
           </div>
+            <div>
+              { isLoading ? (
+                <button className="auth-button animate-pulse">
+                  <p>
+                    Signing you in...
+                  </p>
+                </button>
+              ) : ( 
+                <>
+                  { auth.isAuthenticated ? (
+                    <button className="auth-button" onClick={auth.signOut}>
+                      <p>Log out</p>
+                    </button>
+                  ) : (<button className="auth-button" onClick={auth.signOut}>
+                      <p>Log in</p>
+                    </button>)
+                    }
+                </>
+               ) }
+            </div>
         </section>
       </div>
     </main>
