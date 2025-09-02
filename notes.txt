@@ -1,0 +1,7 @@
+Issues
+Two issue I have faced so far,
+
+1) The button to remove the pdf not working - This is happening because of unavailability of state variable, if we are not using a state variable, the component is not re-rendering post removal of file and hence the updated status which is the removal of pdf is not reflecting. So use a state variable to track the file, and update the value to null onClick of the cross button.
+
+2) Failed to convert PDF into an image - Even after using pdfjs-dist library 5.3.93.
+From the console error I was able to find, this is happening because "convertPdfToImage' function is not able to find the necessary worker file from pdfjs-dist. To solve this, copy the file "pdf.worker.min.mjs" from node_modules/pdfjs-dist/build and paste it inside public folder. 
