@@ -15,15 +15,11 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
     const { auth } = usePuterStore();
-    const location = useLocation();
-    const next = location.search.split("next=")[1];
     const navigate = useNavigate();
   
     useEffect(() => {
       if (!auth.isAuthenticated) navigate('/auth?next=/');
     }, [auth.isAuthenticated])
-
-
 
   return <main className="bg-[url('/images/bg-main.svg')] bg-cover">
       <section className="main-section">
@@ -32,7 +28,6 @@ export default function Home() {
           Track your applications & Resume Ratings
         </h1>
         <Navbar />
-
         <h2>
           Review submissions and check for AI powered feedback
         </h2>
