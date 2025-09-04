@@ -13,13 +13,21 @@ async function loadPdfJs(): Promise<any> {
   if (loadPromise) return loadPromise;
 
   isLoading = true;
-  loadPromise = import("pdfjs-dist/build/pdf.mjs").then((lib) => {
-    // Use CDN worker that matches the library version
-    lib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${lib.version}/pdf.worker.min.mjs`;
-    pdfjsLib = lib;
-    isLoading = false;
-    return lib;
-  });
+  loadPromise = import("pdfjs-dist/build/pdf.mjs")
+    .then((lib) => {
+      // Use the actual version from the imported library
+      console.log("PDF.js version:", lib.version); // Debug log
+      lib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${lib.version}/build/pdf.worker.min.mjs`;
+
+      pdfjsLib = lib;
+      isLoading = false;
+      return lib;
+    })
+    .catch((error) => {
+      console.error("Failed to load PDF.js:", error);
+      isLoading = false;
+      throw error;
+    });
 
   return loadPromise;
 }
