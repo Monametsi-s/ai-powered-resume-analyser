@@ -98,42 +98,42 @@ export const AIResponseFormat = `
         score: number; //rate based on ATS suitability
         tips: {
           type: "good" | "improve";
-          tip: string; //give 3-4 tips
+          tip: string; //give 2-3 tips, keep concise
         }[];
       };
       toneAndStyle: {
         score: number; //max 100
         tips: {
           type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
+          tip: string; //short title
+          explanation: string; //max 1-2 sentences
+        }[]; //give 2-3 tips
       };
       content: {
         score: number; //max 100
         tips: {
           type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
+          tip: string; //short title
+          explanation: string; //max 1-2 sentences
+        }[]; //give 2-3 tips
       };
       structure: {
         score: number; //max 100
         tips: {
           type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
+          tip: string; //short title
+          explanation: string; //max 1-2 sentences
+        }[]; //give 2-3 tips
       };
       skills: {
         score: number; //max 100
         tips: {
           type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
+          tip: string; //short title
+          explanation: string; //max 1-2 sentences
+        }[]; //give 2-3 tips
       };
-    }`;
+      };`;
 
 export const prepareInstructions = ({
   jobTitle,
@@ -147,12 +147,16 @@ export const prepareInstructions = ({
   `You are an expert in ATS (Applicant Tracking System) and resume analysis.
   Please analyze and rate this resume and suggest how to improve it.
   The rating can be low if the resume is bad.
-  Be thorough and detailed. Don't be afraid to point out any mistakes or areas for improvement.
+  Be concise but thorough. Don't be afraid to point out any mistakes or areas for improvement.
   If there is a lot to improve, don't hesitate to give low scores. This is to help the user to improve their resume.
   If available, use the job description for the job user is applying to to give more detailed feedback.
   If provided, take the job description into consideration.
   The job title is: ${jobTitle}
   The job description is: ${jobDescription}
   Provide the feedback using the following format: ${AIResponseFormat}
-  Return the analysis as a JSON object, without any other text and without the backticks.
-  Do not include any other text or comments.`;
+  
+  IMPORTANT: 
+  - Return ONLY valid JSON, no other text
+  - Keep explanations concise (max 2 sentences each)
+  - Limit to 2-3 tips per section to avoid truncation
+  - Ensure the JSON is complete and properly closed`;
