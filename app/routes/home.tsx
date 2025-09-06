@@ -1,10 +1,9 @@
 import type { Route } from "./+types/home";
 import Navbar from "~/components/Navbar";
-import {resumes} from "../../constants";
 import ResumeCard from "~/components/ResumeCard";
 import { usePuterStore } from "~/lib/puter";
-import { Link, useLocation, useNavigate } from "react-router";
-import { use, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -24,20 +23,36 @@ export default function Home() {
     }, [auth.isAuthenticated])
 
     useEffect(() => {
-      const loadResumes = async () => {
-        setLoadingResumes(true);
+  const loadResumes = async () => {
+    setLoadingResumes(true);
+    
+    try {
+      const items = (await kv.list('resume:*', true)) as KVItem[];
 
-        const resumes = (await kv.list('resume:*', true)) as KVItem[];
-
-        const parsedResumes = resumes?.map((resume) => (
-          JSON.parse(resume.value) as Resume
-        ))
-        setResumes(parsedResumes || []);
-        setLoadingResumes(false);
-      }
-      loadResumes();
-
-    }, []);
+      const parsedResumes = items.map((item) => {
+        try {
+          return JSON.parse(item.value) as Resume;
+        } catch {
+          console.warn('Invalid resume data', item.value);
+          return null;
+        }
+      })
+        .filter((resume): resume is Resume => 
+          resume !== null && 
+          typeof resume.id === 'string' &&
+          typeof resume.companyName === 'string'
+        );
+      
+      setResumes(parsedResumes);
+    } catch (error) {
+      console.error('Error loading resumes:', error);
+    } finally {
+      setLoadingResumes(false);
+    }
+  };
+  
+  loadResumes();
+}, []);
 
   return <main className="bg-[url('/images/bg-main.svg')] bg-cover">
       <section className="main-section">
