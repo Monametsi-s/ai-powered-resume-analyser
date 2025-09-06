@@ -23,30 +23,41 @@ const Resume = () => {
     }, [isLoading, auth.isAuthenticated]);
 
     useEffect(() => {
+      let mounted = true;
+      let resumeObjectUrl: string | undefined;
+      let imageObjectUrl: string | undefined;
+
       const loadResume = async () => {
-        const resume = await kv.get(`resume:${id}`);
-        if (!resume) return;
+        try {
+          const resume = await kv.get(`resume:${id}`);
+          if (!resume || !mounted) return;
 
-        const data = JSON.parse(resume);
-        
-        const resumeBlob = await fs.read(data.resumePath);
-        if (!resumeBlob) return;
+          const data = JSON.parse(resume);
+          
+          const resumeBlob = await fs.read(data.resumePath);
+          if (!resumeBlob || !mounted) return;
+          const pdfBlob = new Blob([resumeBlob], { type: 'application/pdf' });
+          resumeObjectUrl = URL.createObjectURL(pdfBlob);
+          setResumeUrl(resumeObjectUrl);
 
-        const pdfBlob = new Blob([resumeBlob], { type: 'application/pdf' });
-        const resumeUrl = URL.createObjectURL(pdfBlob);
-        setResumeUrl(resumeUrl);
+          const imageBlob = await fs.read(data.imagePath);
+          if (!imageBlob || !mounted) return;
+          imageObjectUrl = URL.createObjectURL(imageBlob);
+          setImageUrl(imageObjectUrl);
 
-        const imageBlob = await fs.read(data.imagePath);
-        if (!imageBlob) return;
-
-        const imageUrl = URL.createObjectURL(imageBlob);
-        setImageUrl(imageUrl);
-
-        setFeedback(data.feedback)
-        console.log({id, imageUrl, resumeUrl, feedback: data.feedback });
-      }
-      loadResume();
+          setFeedback(data.feedback);
+        } catch (error) {
+          console.error('Error loading resume:', error);
+        }
+      };
       
+      loadResume();
+
+      return () => {
+        mounted = false;
+        if (resumeObjectUrl) URL.revokeObjectURL(resumeObjectUrl);
+        if (imageObjectUrl) URL.revokeObjectURL(imageObjectUrl);
+      };
     }, [id])
   return (
     <main className="!pt-0">
