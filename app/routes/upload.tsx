@@ -1,11 +1,18 @@
-import { prepareInstructions } from "constants";
+import { prepareInstructions, AIResponseFormat } from "../../constants";
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import FileUploader from "~/components/FileUploader";
-import Navbar from "~/components/Navbar";
 import { convertPdfToImage } from "~/lib/pdf2img";
 import { usePuterStore } from "~/lib/puter";
 import { generateUUID } from "~/lib/utils";
+
+// Add proper types
+interface FormData {
+  companyName: string;
+  jobTitle: string;
+  jobDescription: string;
+  file: File;
+}
 
 const upload = () => {
   const { auth, isLoading, fs, ai, kv } = usePuterStore();
@@ -49,24 +56,29 @@ const upload = () => {
 
     await kv.set(`resume:${uuid}`, JSON.stringify(data));
     setStatusText('Analysing...');
+    console.log("I am analysing");
 
     const feedback = await ai.feedback(
       uploadedFile.path,
-      prepareInstructions({ jobTitle, jobDescription })
+      prepareInstructions({ jobTitle, jobDescription, AIResponseFormat })
     )
       if (!feedback) return setStatusText('Error: Failed to analyze resume');
-      const feedbackText = typeof feedback.message.content === 'string' ? feedback.message.content : feedback.message.content[0].text;
+      const feedbackText = typeof feedback.message.content === 'string' 
+  ? feedback.message.content 
+  : feedback.message.content[0].text;
 
-      try {
-        data.feedback = JSON.parse(feedbackText);
-      } catch (error) {
-        console.error('Failed to parse feedback as JSON:', error);
-        data.feedback = feedbackText; // Store as string if JSON parsing fails
-      }
-      await kv.set(`resume:${uuid}`, JSON.stringify(data));
-      setStatusText('Analysis complete, redirecting...');
-      console.log(data);
-      navigate(`/resume/${uuid}`);
+try {
+  data.feedback = JSON.parse(feedbackText);
+  await kv.set(`resume:${uuid}`, JSON.stringify(data));
+  setStatusText('Analysis complete, redirecting...');
+  console.log(data);
+  navigate(`/resume/${uuid}`);
+} catch (parseError) {
+  console.error('JSON parse error:', parseError);
+  setStatusText('Error: Invalid feedback format from AI');
+  setIsProcessing(false);
+  return;
+}
   }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -88,7 +100,6 @@ const upload = () => {
 
   return (
     <main className="bg-[url('/images/bg-main.svg')] bg-cover">
-      <Navbar />
 
       <section className="main-section">
         <div className="page-heading py-4">
