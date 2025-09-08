@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import FileUploader from "~/components/FileUploader";
 import { convertPdfToImage } from "~/lib/pdf2img";
 import { usePuterStore } from "~/lib/puter";
-import { generateUUID } from "~/lib/utils";
+import { generateUUID, sanitizeFilename } from "~/lib/utils";
 
 // Add proper types
 interface FormData {
@@ -29,7 +29,8 @@ const upload = () => {
   const handleAnalyse = async ({ companyName, jobTitle, jobDescription, file } : {companyName: string, jobTitle: string, jobDescription: string, file: File}) => {
     setIsProcessing(true);
     setStatusText('Uploading the file...');
-    const uploadedFile = await fs.upload([file]);
+    const safeName = sanitizeFilename(file.name, "resume.pdf");
+    const uploadedFile = await fs.upload([{ ...file, name: safeName }]);
     if(!uploadedFile) return setStatusText('Error failed to upload file');
 
     setStatusText('Converting to image... ');
