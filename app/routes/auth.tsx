@@ -1,23 +1,30 @@
 import { use } from "react";
 import { usePuterStore } from "~/lib/puter";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
+import { safeRedirect } from "../lib/utils";
 
 export const meta = () => [
   { title: "CVAnalyser | Auth" },
   { name: "description", content: "Login to your account" },
 ];
 
-const auth = () => {
+const Auth = () => {
   const { isLoading, auth } = usePuterStore();
   const location = useLocation();
-  const next = location.search.split("next=")[1];
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (auth.isAuthenticated) navigate(next);
-  }, [auth.isAuthenticated, next])
+    if (auth.isAuthenticated) navigate(safeRedirect(location.search.split("next=")[1], "/"));
+  }, [auth.isAuthenticated, location.search])
 
+
+  const handleLoginSuccess = async () => {
+    // ...existing login logic...
+    const params = new URLSearchParams(location.search);
+    const next = params.get("next");
+    navigate(safeRedirect(next, "/"));
+  };
 
   return (
     <main className="bg-[url('/images/bg-auth.svg')] bg-cover min-h-screen flex items-center justify-center">
@@ -40,7 +47,7 @@ const auth = () => {
                     <button className="auth-button" onClick={auth.signOut}>
                       <p>Log out</p>
                     </button>
-                  ) : (<button className="auth-button" onClick={auth.signIn}>
+                  ) : (<button className="auth-button" onClick={handleLoginSuccess}>
                       <p>Log in</p>
                     </button>)
                     }
@@ -53,4 +60,4 @@ const auth = () => {
   );
 };
 
-export default auth;
+export default Auth;
