@@ -150,3 +150,140 @@ form {
     opacity: 1;
   }
 }
+
+/* Global design tokens */
+:root{
+  --accent: #2563EB;      /* primary */
+  --accent-600: #1D4ED8;
+  --muted: #6B7280;
+  --bg: #F8FAFC;
+  --card: #ffffff;
+  --ring: rgba(37,99,235,0.12);
+  --glass: rgba(255,255,255,0.6);
+}
+
+/* Ensure Inter is preferred when available (font link handled in root) */
+.font-sans { font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+
+/* Tailwind-first visual helpers */
+@layer utilities {
+  /* Layout container */
+  .page-container { @apply max-w-5xl mx-auto px-4 sm:px-6 lg:px-8; }
+
+  /* Reusable card */
+  .card {
+    @apply bg-white rounded-2xl overflow-hidden;
+    background-color: var(--card);
+    border: 1px solid rgba(15,23,42,0.04);
+    box-shadow: 0 6px 18px rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.06);
+  }
+
+  /* Glass header (navbar) */
+  .glass {
+    @apply bg-white/60 backdrop-blur-sm border-b border-gray-100;
+  }
+
+  /* Drop/upload area */
+  .drop-area {
+    @apply border-2 border-dashed rounded-xl p-6 text-center bg-white;
+    border-color: rgba(15,23,42,0.06);
+    transition: box-shadow .12s ease, border-color .12s ease, transform .08s ease;
+  }
+  .drop-area:hover { @apply border-indigo-600; box-shadow: 0 8px 24px rgba(37,99,235,0.06); }
+
+  /* Form inputs */
+  .form-input {
+    @apply w-full rounded-lg border px-3 py-2 bg-white;
+    border: 1px solid rgba(15,23,42,0.06);
+    transition: box-shadow .15s ease, border-color .15s ease, transform .08s ease;
+  }
+  .form-input:focus {
+    @apply outline-none;
+    box-shadow: 0 8px 24px var(--ring);
+    border-color: var(--accent-600);
+    transform: translateY(-1px);
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg text-white font-semibold px-4 py-2;
+    background: linear-gradient(90deg, var(--accent), var(--accent-600));
+    box-shadow: 0 8px 24px rgba(37,99,235,0.12);
+    transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(37,99,235,0.14); }
+  .btn-primary[disabled] { @apply opacity-60 cursor-not-allowed; transform: none; box-shadow: none; }
+
+  /* Typography helpers */
+  .kicker { @apply text-sm uppercase tracking-wide text-gray-400; }
+  .heading { @apply text-2xl font-semibold text-gray-900; }
+
+  /* Resume list / card specifics */
+  .resume-list .card.resume-card { @apply p-4 flex gap-4 items-center; border-radius: 12px; }
+  .resume-list .card.resume-card:hover { box-shadow: 0 10px 28px rgba(15,23,42,0.06); transform: translateY(-3px); transition: transform .12s ease, box-shadow .12s ease; }
+
+  .muted { color: var(--muted); font-size: .9rem; }
+  .preview-img { @apply block max-w-full h-auto rounded-md; }
+
+  /* Focus styling for accessibility */
+  :where(a, button, input):focus {
+    box-shadow: 0 0 0 4px var(--ring);
+  }
+}
+
+/* Responsive typography tweaks */
+@media (min-width: 1024px) {
+  .heading { font-size: 28px; }
+}
+
+/* Ensure object-url previews (images) are constrained */
+.preview-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+}
+
+/* Minor page background */
+body {
+  background-color: var(--bg);
+  color: #0f172a;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --accent: #2563EB;
+  --accent-600: #1D4ED8;
+  --muted: #6B7280;
+  --bg: #F8FAFC;
+  --card: #ffffff;
+  --ring: rgba(37,99,235,0.12);
+  --glass: rgba(255,255,255,0.6);
+}
+
+.font-sans { font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+
+@layer utilities {
+  .page-container { @apply max-w-5xl mx-auto px-4 sm:px-6 lg:px-8; }
+  .card { @apply bg-white rounded-2xl overflow-hidden; border: 1px solid rgba(15,23,42,0.04); box-shadow: 0 6px 18px rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.06); }
+  .glass { @apply bg-white/60 backdrop-blur-sm border-b border-gray-100; }
+  .drop-area { @apply border-2 border-dashed rounded-xl p-6 text-center bg-white; border-color: rgba(15,23,42,0.06); transition: box-shadow .12s ease, border-color .12s ease; }
+  .drop-area:hover { @apply border-indigo-600; box-shadow: 0 8px 24px rgba(37,99,235,0.06); }
+  .form-input { @apply w-full rounded-lg border px-3 py-2 bg-white; border: 1px solid rgba(15,23,42,0.06); transition: box-shadow .15s ease, border-color .15s ease; }
+  .form-input:focus { @apply outline-none; box-shadow: 0 8px 24px var(--ring); border-color: var(--accent-600); transform: translateY(-1px); }
+  .btn-primary { @apply inline-flex items-center justify-center rounded-lg text-white font-semibold px-4 py-2; background: linear-gradient(90deg, var(--accent), var(--accent-600)); box-shadow: 0 8px 24px rgba(37,99,235,0.12); transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(37,99,235,0.14); }
+  .btn-primary[disabled] { @apply opacity-60 cursor-not-allowed; transform: none; box-shadow: none; }
+  .kicker { @apply text-sm uppercase tracking-wide text-gray-400; }
+  .heading { @apply text-2xl font-semibold text-gray-900; }
+  .resume-list .card.resume-card { @apply p-4 flex gap-4 items-center; border-radius: 12px; }
+  .resume-list .card.resume-card:hover { box-shadow: 0 10px 28px rgba(15,23,42,0.06); transform: translateY(-3px); transition: transform .12s ease, box-shadow .12s ease; }
+  .muted { color: var(--muted); font-size: .9rem; }
+  .preview-img { @apply block max-w-full h-auto rounded-md; }
+  :where(a, button, input):focus { box-shadow: 0 0 0 4px var(--ring); }
+}
+
+body { background-color: var(--bg); color: #0f172a; }
