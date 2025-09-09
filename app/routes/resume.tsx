@@ -5,13 +5,14 @@ import Summary from "~/components/feedback/Summary";
 import ATS from "~/components/feedback/ATS";
 import Details from "~/components/feedback/Details";
 
+
 export const meta = () => [
   { title: "CVAnalyser | Review" },
   { name: "description", content: "Review your resume" },
 ];
 
 const Resume = () => {
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>();
     const { auth, isLoading, fs, kv } = usePuterStore();
     const [imageUrl, setImageUrl] = useState('');
     const [resumeUrl, setResumeUrl] = useState('');
