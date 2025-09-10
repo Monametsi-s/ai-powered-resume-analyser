@@ -149,7 +149,7 @@ If you encounter any issues or have questions:
 
 1. Check the [Issues](https://github.com/Monametsi-s/ai-powered-resume-analyser/issues) page
 2. Create a new issue with detailed information
-3. Contact the development team
+3. Send email to [me](mailto:seelemonametsi@gmail.com)
 
 ---
 
